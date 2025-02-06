@@ -4,13 +4,20 @@ import requests
 app = Flask(__name__)
 app.json.sort_keys=False
 
-@app.route('/')
+@app.errorhandler(400)
+def alphabet_passed():
+    is_error = True
+    response = jsonify({'number': 'alphabet',
+                'error': is_error})
+    
+    return response, 400
 
+@app.route('/')
 def welcome():
     return 'HNG Backend Stage 1 Task'
 
-@app.route('/api/classify-number', methods = ['GET'])
 
+@app.route('/api/classify-number', methods = ['GET'])
 def classify_num():
     '''
     Performs three tests:
@@ -95,14 +102,16 @@ def classify_num():
         return response
         
     except TypeError:
+            is_error = True
             response = jsonify({'number': 'alphabet',
-                        'error': 'true'})
+                        'error': is_error})
             
-            return response
+            return flask.redirect('/404')
     
     except ValueError:
+            is_error = True
             response = jsonify({'number': 'negative',
-                                'error': 'true'})
+                                'error': is_error})
             
             return response
 

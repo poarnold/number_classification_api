@@ -11,7 +11,7 @@ This guide provides step-by-step instructions to set up an Apache2 server to hos
 
 ### 1. Install Flask
 ```sh
-pip3 install flask
+pip3 install flask requests
 ```
 
 ### 2. Navigate to the Application Directory
@@ -26,8 +26,7 @@ source flask-venv/bin/activate
 
 ### 4. Install Dependencies
 ```sh
-pip3 install flask
-pip3 install requests
+pip3 install flask requests
 ```
 
 ### 5. Run Flask Application Locally (Optional)
@@ -90,6 +89,40 @@ apachectl -t
 sudo systemctl restart apache2
 ```
 
+## API Endpoints
+
+### 1. Welcome Endpoint
+```http
+GET /
+```
+Response:
+```json
+"HNG Backend Stage 1 Task"
+```
+
+### 2. Number Classification API
+```http
+GET /api/classify-number?number=<int>
+```
+#### Features:
+- Checks if a number is **prime**
+- Determines if it is **perfect**
+- Identifies if it is an **Armstrong number**
+- Checks its **parity (odd/even)**
+- Fetches a **fun fact** about the number from the Numbers API
+
+#### Example Response:
+```json
+{
+    "number": 7,
+    "is_prime": true,
+    "is_perfect": false,
+    "properties": ["odd"],
+    "digit_sum": 7,
+    "fun_fact": "7 is the number of wonders in the world."
+}
+```
+
 ## Verification
 Check if Apache is running:
 ```sh
@@ -104,6 +137,5 @@ Visit your server's IP or domain in a browser to confirm Flask is running under 
 tail -f /var/log/apache2/error.log
 ```
 - Ensure the Flask application runs correctly before deploying to Apache.
-
 
 
