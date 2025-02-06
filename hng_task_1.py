@@ -113,7 +113,7 @@ def classify_num():
             response = jsonify({'number': 'negative',
                                 'error': is_error})
             
-            return response
+            return response, 400
 
     
 
