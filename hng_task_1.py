@@ -4,13 +4,13 @@ import requests
 app = Flask(__name__)
 app.json.sort_keys=False
 
-@app.errorhandler(400)
-def alphabet_passed():
-    is_error = True
-    response = jsonify({'number': 'alphabet',
-                'error': is_error})
+# @app.errorhandler(400)
+# def alphabet_passed():
+#     is_error = True
+#     response = jsonify({'number': 'alphabet',
+#                 'error': is_error})
     
-    return response, 400
+#     return response, 400
 
 @app.route('/')
 def welcome():
@@ -106,7 +106,7 @@ def classify_num():
             response = jsonify({'number': 'alphabet',
                         'error': is_error})
             
-            return flask.redirect('/404')
+            return response, 400
     
     except ValueError:
             is_error = True
