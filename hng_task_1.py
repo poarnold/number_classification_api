@@ -22,7 +22,7 @@ def classify_num():
         ii. perfect test
         iii. armstrong test
         iv. parity test
-        
+
     A basic error check is implemented to return response when a different object type is inputted.
         
     Parameters
@@ -38,10 +38,23 @@ def classify_num():
                 "fun_fact": response from <http://numbersapi.com/'+str(input num)+'/math?json>}
 
     ''' 
-    input_num = request.args.get('number', type=int) #Variable to store input
+    
+    input_num = request.args.get('number', int) #Variable to store input
     
     try:
         
+        ## Check missing inputs and invalid inputs
+        if input_num is None:
+            return jsonify({'number': 'missing. /n Missing required parameter: positive number', 'error':True}), 400
+        
+        if not input_num.isdigit():
+            try:
+                if int(input_num) < 0:
+                    return jsonify({'number': 'negative', 'error': True }), 400
+            except:
+                return jsonify({'number': 'alphabet', 'error': True}), 400
+        
+                     
         input_num = int(input_num)
 
         is_positive = 1
@@ -49,7 +62,7 @@ def classify_num():
             is_positive = 0
             input_num = abs(input_num)
 
-        ## TODO-1: Prime test - input number is positive, greater than 0
+        ## Prime test - input number is positive, greater than 0
         divisors = []
         is_prime = False #assume a number is not a prime number
         for divisor in range(1,input_num):
@@ -57,17 +70,17 @@ def classify_num():
                 divisors.append(divisor)
             # if len(divisors) > 3:
             #         break
-        if len(divisors) < 2 and len(divisor) != 0:
+        if len(divisors) < 2 and len(divisors) != 0:
             is_prime = True
         
         
-        ## TODO-2: Perfect test - sum of divisors should equal positive number
+        ## Perfect test - sum of divisors should equal positive number
         is_perfect = False
         if sum(divisors) == input_num:
             is_perfect = True
 
 
-        ## TODO-3: Armstrong test - sum of each digits raised to the number of digits is equal to the input positive number
+        ## Armstrong test - sum of each digits raised to the number of digits is equal to the input positive number
         arm_num = input_num.__repr__()
         len_num = len(arm_num)
 
@@ -82,7 +95,7 @@ def classify_num():
             is_armstrong = True
 
 
-        ## TODO-4: Parity test - check if an integer is odd or not
+        ## Parity test - check if an integer is odd or not
         is_odd = True
         if input_num%2 == 0:
             is_odd = False
@@ -96,13 +109,13 @@ def classify_num():
         else:
             property.append("even")
 
-        ## TODO-5: Funfact API - get an interesting information about the number
+        ## Funfact API - get an interesting information about the number
         api_url = 'http://numbersapi.com/'+str(input_num)+'/math?json'
         response = requests.get(api_url)
         response = response.json()
 
         
-        ## TODO-6: Return the response
+        ## Return the response
         response = jsonify({"number": input_num,
                         "is_prime": is_prime,
                         "is_perfect": is_perfect,
@@ -112,19 +125,9 @@ def classify_num():
         
         return response
         
-    except TypeError:
-            is_error = True
-            response = jsonify({'number': 'alphabet',
-                        'error': is_error})
-            
-            return response, 400
     
-    except ValueError:
-        is_error = True
-        response = jsonify({'number': 'negative',
-                    'error': is_error})
-        
-        return response, 400
+    except Exception as e:
+        return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
 
 
 if __name__ == '__main__':
