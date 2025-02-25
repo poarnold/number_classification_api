@@ -39,13 +39,13 @@ def classify_num():
 
     ''' 
     
-    input_num = request.args.get('number', int) #Variable to store input
+    input_num = request.args.get('number') #Variable to store input
     
     try:
         
         ## Check missing inputs and invalid inputs
         if input_num is None:
-            return jsonify({'number': 'missing. /n Missing required parameter: positive number', 'error':True}), 400
+            return jsonify({'number': 'missing. Missing required parameter - positive number', 'error':True}), 400
         
         if not input_num.isdigit():
             try:
