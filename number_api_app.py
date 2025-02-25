@@ -28,6 +28,7 @@ def classify_num():
     Parameters
     ----------
         number (int): positive integer
+        
     Returns
     -------
          json,  {"number": input num,
