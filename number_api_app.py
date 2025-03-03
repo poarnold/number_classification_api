@@ -28,7 +28,7 @@ def classify_num():
     Parameters
     ----------
         number (int): positive integer
-        
+
     Returns
     -------
          json,  {"number": input num,
@@ -132,5 +132,5 @@ def classify_num():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
     
