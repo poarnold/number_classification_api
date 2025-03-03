@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import requests # to access external apis
 from flask_cors import CORS #to allow cross origin resource sharing
-
+import logging
 app = Flask(__name__)
 app.json.sort_keys=False
 CORS(app)
@@ -128,7 +128,8 @@ def classify_num():
         
     
     except Exception as e:
-        return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
+        logging.log(str(e))
+        return jsonify({'error': 'Internal', 'message': "An internal error has occured"}), 500
 
 
 if __name__ == '__main__':
