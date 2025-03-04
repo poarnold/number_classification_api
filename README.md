@@ -1,34 +1,69 @@
 # Setting Up an Apache2 Server for a Flask Application
 
-This guide provides step-by-step instructions to set up an Apache2 server to host a Flask application on Ubuntu.
+This guide provides a step-by-step instructions to set up an Apache2 server to host a Flask Backend application on Ubuntu.
 
 ## Prerequisites
-- Ubuntu system
-- Python 3 installed
+- Ubuntu system (22.04) 
+
+Update the package installers:
+```sh
+
+sudo apt-get update -y && apt-get upgrade -y
+```
+- Python 3, Pip and Venv installed
+```sh
+
+sudo apt-get install python3 python3-pip python3-venv -y
+```
+Create a symbolic link of **python3** installation to **python** keyword
+
+```sh
+sudo ln -s /usr/bin/python3 /usr/bin/python
+```
+
 - Apache2 installed
+```sh
+
+sudo apt install apache2 -y
+```
 
 ## Steps to Set Up the Server
 
-### 1. Install Flask
+Python 3.11+ on Debian systems currently do not allow you to install specific packages system wide with `pip3` or `pip`.
+`apt-get` and `apt`. A virtual environment is recommended using [venv](https://virtualenv.pypa.io/en/latest/user_guide.html) or  [pipx](https://pipx.pypa.io/latest/installation/), or you can run the application as root user *[This is not recommended]*
+
+Switching to root user
 ```sh
-pip3 install flask requests
+sudo -i || sudo su -
+```
+### 1. Create Application Directory and Virtual Environment 
+```sh
+mkdir -p /opt/flask-app
+cd /opt/flask-app
+python -m venv flask-venv
 ```
 
-### 2. Navigate to the Application Directory
-```sh
-cd /opt/flask-app/
-```
-
-### 3. Activate Virtual Environment
+### 2. Activate Virtual Environment
 ```sh
 source flask-venv/bin/activate
 ```
 
-### 4. Install Dependencies
+### 3. Install Dependencies
 ```sh
 pip3 install flask requests
 ```
 
+### 4. Create Application file in Application Directory
+
+```sh
+sudo nano app.py
+```
+Paste the contents of `number_api_app.py` file into `app.py`
+
+
+```sh
+export FLASK_APP=app.py
+```
 ### 5. Run Flask Application Locally (Optional)
 ```sh
 flask run --host=0.0.0.0
@@ -39,7 +74,7 @@ flask run --host=0.0.0.0
 deactivate
 ```
 
-### 7. Install Apache and WSGI Module
+### 7. Install Apache Python WSGI Module
 ```sh
 sudo apt-get install libapache2-mod-wsgi-py3
 ```
@@ -65,20 +100,21 @@ Add the following content to `flask.conf`:
 ```apache
 <VirtualHost *:80>
     ServerName your_domain_or_IP
-    WSGIDaemonProcess flask-app threads=5
+    DocumentRoot /opt/flask-app/
+
+    WSGIDaemonProcess app user=$USER group=$USER threads=5 python-home=/opt/flask-app/flask-venv
     WSGIScriptAlias / /opt/flask-app/flask-app.wsgi
-
-    <Directory /opt/flask-app>
-        Require all granted
-    </Directory>
-
-    Alias /static /opt/flask-app/static
-    <Directory /opt/flask-app/static/>
-        Require all granted
-    </Directory>
 
     ErrorLog ${APACHE_LOG_DIR}/flask-error.log
     CustomLog ${APACHE_LOG_DIR}/flask-access.log combined
+    
+    <Directory /opt/flask-app>
+        WSGIProcessGroup app
+        WSGIApplicationGroup %{GLOBAL}
+        Order deny,allow
+        Require all granted
+    </Directory>
+
 </VirtualHost>
 ```
 
@@ -137,5 +173,16 @@ Visit your server's IP or domain in a browser to confirm Flask is running under 
 tail -f /var/log/apache2/error.log
 ```
 - Ensure the Flask application runs correctly before deploying to Apache.
+
+## Troubleshooting Documentations
+- [X] [Rosehosting](https://www.rosehosting.com/blog/how-to-install-flask-on-ubuntu-22-04-with-apache-and-wsgi/)
+- [X] [Flask Documentation](https://flask.palletsprojects.com/en/stable/deploying/mod_wsgi/)
+- [x] [Apache2 Configuration](https://blog.geekinstitute.org/2024/11/apache2-virtual-host-configuration.html#7-ssltls-configuration)
+- [X] [Flask, Apache and Wsgi](https://www.thegeeksearch.com/setup-flask-with-apache-and-wsgi/)
+- [X] [Graycode](https://graycode.ie/blog/deploy-python-flask-app-on-apache2-with-mod-wsgi/)
+
+## Enabling HTTPS
+- <https://techexpert.tips/apache/enable-https-apache/>
+- <https://plainenglish.io/blog/how-to-securely-deploy-flask-with-apache-in-a-linux-server-environment>
 
 
