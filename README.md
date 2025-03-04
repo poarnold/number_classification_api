@@ -1,6 +1,6 @@
-# Setting Up an Apache2 Server for a Flask Application
+# Setting Up an Apache2 Server for the Flask Application
 
-This guide provides a step-by-step instructions to set up an Apache2 server to host a Flask Backend application on Ubuntu.
+This guide provides a step-by-step instructions to set up an Apache2 server to host the Flask Backend application - `number_api_app.py`  on Ubuntu.
 
 ## Prerequisites
 - Ubuntu system (22.04) 
