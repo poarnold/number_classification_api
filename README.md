@@ -167,6 +167,8 @@ sudo systemctl status apache2
 
 Visit your server's IP or domain in a browser to confirm Flask is running under Apache.
 
+![Application_Endpoint_Test](/Screenshot.png)
+
 ## Troubleshooting
 - Check Apache logs for errors:
 ```sh
